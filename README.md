@@ -25,13 +25,13 @@ or, for brevity,
 
 * Declare the dependency to clj-stripe in your project.clj
 
-```
+```clj
 :dependencies [abengoa/clj-stripe "1.0.4"]
 ```
 
 * Import the namespaces you may need
 
-```
+```clj
 (:require [clj-stripe.util :as util]
 	  [clj-stripe.common :as common]
 	  [clj-stripe.plans :as plans]
@@ -46,7 +46,7 @@ or, for brevity,
 
 * First step is to create a some subscription plans:
 
-```
+```clj
 (common/with-token "vtUQeOtUnYr7PGCLQ96Ul4zqpDUO4sOE:"
     (common/execute (plans/create-plan "plan1" (common/money-quantity 500 "usd") (plans/monthly) "Starter"))
     (common/execute (plans/create-plan "plan2" (common/money-quantity 1000 "usd") (plans/monthly) "Professional")))
@@ -54,91 +54,91 @@ or, for brevity,
 
 * To show a user the list of available plans:
 
-```
+```clj
 (common/with-token "vtUQeOtUnYr7PGCLQ96Ul4zqpDUO4sOE:"
     (common/execute (plans/get-all-plans)))
 ```
 
 * When a new user signs up, create a new customer:
 
-```
+```clj
 (common/with-token "vtUQeOtUnYr7PGCLQ96Ul4zqpDUO4sOE:"
     (common/execute (customers/create-customer (common/card "A card token obtained with stripe.js") (customers/email "site@stripe.com") (common/plan "plan1"))))
 ```
 
 * To display the customer information:
 
-```
+```clj
 (common/with-token "vtUQeOtUnYr7PGCLQ96Ul4zqpDUO4sOE:"
     (common/execute (customers/get-customer "cu_1mXfGxS9m8")))
 ```
 
 * And the billing status of the customer:
 
-```
+```clj
 (common/with-token "vtUQeOtUnYr7PGCLQ96Ul4zqpDUO4sOE:"
     (common/execute (invoices/get-upcoming-invoice (common/customer "cu_1mXfGxS9m8"))))
 ```
 
 * Get all the invoices of a customer:
 
-```
+```clj
 (common/with-token "vtUQeOtUnYr7PGCLQ96Ul4zqpDUO4sOE:"
 	(common/execute (invoices/get-all-invoices (common/customer "cu_1mXfGxS9m8"))))
 ```
 
 * Get an individual invoice:
 
-```
+```clj
 (common/with-token "vtUQeOtUnYr7PGCLQ96Ul4zqpDUO4sOE:"
 	(common/execute (invoices/get-invoice "INVOICE_ID")))
 ```
 
 * For a one time charge to an existing customer:
 
-```
+```clj
 (common/with-token "vtUQeOtUnYr7PGCLQ96Ul4zqpDUO4sOE:"
     (common/execute (charges/create-charge (common/money-quantity 5000 "usd") (common/customer "cu_1mXfGxS9m8") (common/description "This an extra charge for some stuff"))))
 ```
 
 * Get all the charges that were billed to a customer:
 
-```
+```clj
 (common/with-token "vtUQeOtUnYr7PGCLQ96Ul4zqpDUO4sOE:"
     (common/execute (charges/get-all-charges (common/customer "cu_1mXfGxS9m8"))))
 ```
 
 * Get all the charges of a customer, paginated (get 5 charges starting at index 20):
 
-```
+```clj
 (common/with-token "vtUQeOtUnYr7PGCLQ96Ul4zqpDUO4sOE:"
     (common/execute (charges/get-all-charges (common/customer "cu_1mXfGxS9m8") (common/position 5 20))))
 ```
 
 * If a charge needs to be refunded
 
-```
+```clj
 (common/with-token "vtUQeOtUnYr7PGCLQ96Ul4zqpDUO4sOE:"
     (common/execute (charges/create-refund "charge-id")))
 ```
 
 * Upgrade the plan of a customer
 
-```
+```clj
 (common/with-token "vtUQeOtUnYr7PGCLQ96Ul4zqpDUO4sOE:"
     (common/execute (subscriptions/subscribe-customer (common/plan "plan2") (common/customer "cu_1mXfGxS9m8") (subscriptions/do-not-prorate))))
 ```
 
 * Unsubscribe a customer from the current plan
 
-```
+```clj
 (common/with-token "vtUQeOtUnYr7PGCLQ96Ul4zqpDUO4sOE:"
     (common/execute (subscriptions/unsubscribe-customer (common/customer "cu_1mXfGxS9m8") (subscriptions/immediately))))
 ```
 
 * Delete a customer
 
-```
+```clj
 (common/with-token "vtUQeOtUnYr7PGCLQ96Ul4zqpDUO4sOE:"
     (common/execute (customers/delete-customer "cu_1mXfGxS9m8")))
 ```
